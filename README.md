@@ -3,7 +3,8 @@
 
 # SRV Record Load Balancer for Go
 
-Selects a `SRV` record answer according to specified load balancer algorithm, then resolves its `A` record to an ip, and returns an `Address` structure:
+Selects a `SRV` record answer according to specified load balancer algorithm,
+then resolves its `A` record to an ip, and returns an `Address` structure:
 
 	type Address struct {
 		Address string
