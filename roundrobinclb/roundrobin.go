@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/benschw/dns-clb/dns"
+	"github.com/benschw/srv-lb/dns"
 )
 
 func New(lib dns.Lookup) *RoundRobinClb {

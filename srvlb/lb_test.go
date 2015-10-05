@@ -1,10 +1,10 @@
-package clb
+package srvlb
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/benschw/dns-clb/dns"
+	"github.com/benschw/srv-lb/dns"
 )
 
 // Example load balancer with defaults

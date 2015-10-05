@@ -7,15 +7,6 @@ import (
 	"github.com/miekg/dns"
 )
 
-type Address struct {
-	Address string
-	Port    uint16
-}
-
-func (a Address) String() string {
-	return fmt.Sprintf("%s:%d", a.Address, a.Port)
-}
-
 type Lookup interface {
 	LookupSRV(name string) ([]net.SRV, error)
 	LookupA(name string) (string, error)

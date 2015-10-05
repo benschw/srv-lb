@@ -5,7 +5,7 @@ import (
 	"log"
 	"testing"
 
-	"github.com/benschw/dns-clb/dns"
+	"github.com/benschw/srv-lb/dns"
 	"github.com/stretchr/testify/assert"
 )
 

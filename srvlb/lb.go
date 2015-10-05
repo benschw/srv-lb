@@ -1,6 +1,6 @@
-package clb
+package srvlb
 
-import "github.com/benschw/dns-clb/dns"
+import "github.com/benschw/srv-lb/dns"
 
 type LoadBalancer interface {
 	Next() (dns.Address, error)

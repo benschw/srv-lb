@@ -1,9 +1,9 @@
-package clb
+package srvlb
 
 import (
-	"github.com/benschw/dns-clb/dns"
-	"github.com/benschw/dns-clb/randomclb"
-	"github.com/benschw/dns-clb/roundrobinclb"
+	"github.com/benschw/srv-lb/dns"
+	"github.com/benschw/srv-lb/randomclb"
+	"github.com/benschw/srv-lb/roundrobinclb"
 )
 
 type SRVLoadBalancerDriver interface {

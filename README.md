@@ -14,7 +14,7 @@ Selects a `SRV` record answer according to specified load balancer algorithm, th
 ## Example:
 	
 	srvName := "foo.service.fligl.io"
-	lb := New(srvName)
+	lb := srvlb.New(srvName)
 
 	address, err := lb.Next()
 	if err != nil {
@@ -30,11 +30,11 @@ Selects a `SRV` record answer according to specified load balancer algorithm, th
 ### or configure explicitely
 
 	srvName := "foo.service.fligl.io"
-	lbDriver := NewDriver(&Config{
+	lbDriver := srvlb.NewDriver(&Config{
 		Dns:      dns.NewDefaultLookupLib(),
 		Strategy: RoundRobin,
 	})
-	lb := &SRVLoadBalancer{Lb: lbDriver, Address: srvName}
+	lb := &srvlb.SRVLoadBalancer{Lb: lbDriver, Address: srvName}
 
 	address, err := lb.Next()
 	if err != nil {
