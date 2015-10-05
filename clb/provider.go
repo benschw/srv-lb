@@ -1,6 +1,6 @@
 package clb
 
-import "github.com/benschw/dns-clb-go/dns"
+import "github.com/benschw/dns-clb/dns"
 
 type AddressProvider interface {
 	GetAddress() (dns.Address, error)

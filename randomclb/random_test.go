@@ -5,7 +5,8 @@ import (
 	"log"
 	"testing"
 
-	"github.com/benschw/dns-clb-go/dns"
+	"github.com/benschw/dns-clb/dns"
+	"github.com/stretchr/testify/assert"
 )
 
 var _ = fmt.Print // For debugging; delete when done.
@@ -15,16 +16,14 @@ var _ = log.Print // For debugging; delete when done.
 func TestRandomLookup(t *testing.T) {
 	// given
 	srvName := "foo.service.fligl.io"
-	lib := dns.NewLookupLib("8.8.8.8:53")
-	c := NewRandomClb(lib)
+	lib := dns.NewDefaultLookupLib()
+	c := New(lib)
 
 	// when
 	address, err := c.GetAddress(srvName)
 
 	// then
-	if err != nil {
-		t.Error(err)
-	}
+	assert.Nil(t, err)
 
 	if address.Port == 8001 && address.Address == "0.1.2.3" {
 		return

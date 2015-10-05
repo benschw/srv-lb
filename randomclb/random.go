@@ -2,11 +2,12 @@ package randomclb
 
 import (
 	"fmt"
-	"github.com/benschw/dns-clb-go/dns"
 	"math/rand"
+
+	"github.com/benschw/dns-clb/dns"
 )
 
-func NewRandomClb(lib dns.Lookup) *RandomClb {
+func New(lib dns.Lookup) *RandomClb {
 	lb := new(RandomClb)
 	lb.dnsLib = lib
 	return lb

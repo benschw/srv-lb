@@ -2,19 +2,12 @@ package roundrobinclb
 
 import (
 	"fmt"
-	"net"
 	"sort"
 
-	"github.com/benschw/dns-clb-go/dns"
+	"github.com/benschw/dns-clb/dns"
 )
 
-type ByTarget []net.SRV
-
-func (a ByTarget) Len() int           { return len(a) }
-func (a ByTarget) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a ByTarget) Less(i, j int) bool { return a[i].Target < a[j].Target }
-
-func NewRoundRobinClb(lib dns.Lookup) *RoundRobinClb {
+func New(lib dns.Lookup) *RoundRobinClb {
 	lb := new(RoundRobinClb)
 	lb.dnsLib = lib
 	lb.i = 0
@@ -34,7 +27,7 @@ func (lb *RoundRobinClb) GetAddress(name string) (dns.Address, error) {
 	if err != nil {
 		return add, err
 	}
-	sort.Sort(ByTarget(srvs))
+	sort.Sort(dns.ByTarget(srvs))
 
 	if len(srvs) == 0 {
 		return add, fmt.Errorf("no SRV records found")

@@ -2,7 +2,10 @@ package dns
 
 import (
 	"net"
+	"sort"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestLookupShoudFailWithBadNS(t *testing.T) {
@@ -10,9 +13,7 @@ func TestLookupShoudFailWithBadNS(t *testing.T) {
 
 	_, err := lib.LookupA("foo")
 
-	if err == nil {
-		t.Error("looking up foo on foo:9999 should product an error")
-	}
+	assert.NotNil(t, err)
 }
 
 func TestLookupShoudFailWithBadHost(t *testing.T) {
@@ -20,9 +21,7 @@ func TestLookupShoudFailWithBadHost(t *testing.T) {
 
 	_, err := lib.LookupA("foo")
 
-	if err == nil {
-		t.Error("looking up foo on 8.8.8.8:53 should product an error")
-	}
+	assert.NotNil(t, err)
 }
 
 func TestLookupShouldResolveARecord(t *testing.T) {
@@ -30,13 +29,33 @@ func TestLookupShouldResolveARecord(t *testing.T) {
 
 	address, err := lib.LookupA("github.com")
 
-	if err != nil {
-		t.Error(err)
-	}
+	assert.Nil(t, err)
 
 	ip := net.ParseIP(address)
-	if ip.To4() == nil {
-		t.Errorf("address '%s' not valid", address)
-	}
+	assert.NotNil(t, ip.To4())
+}
 
+func TestDefaultLookupA(t *testing.T) {
+	lib := NewDefaultLookupLib()
+
+	address, err := lib.LookupA("github.com")
+
+	assert.Nil(t, err)
+
+	ip := net.ParseIP(address)
+	assert.NotNil(t, ip.To4())
+}
+
+func TestDefaultLookupSRV(t *testing.T) {
+	lib := NewDefaultLookupLib()
+
+	addresses, err := lib.LookupSRV("foo.service.fligl.io")
+
+	assert.Nil(t, err)
+
+	sort.Sort(ByTarget(addresses))
+
+	assert.Equal(t, 2, len(addresses), "should be two results")
+	assert.Equal(t, "foo1.fligl.io.", addresses[0].Target, "Unexpected Result")
+	assert.Equal(t, "foo2.fligl.io.", addresses[1].Target, "Unexpected Result")
 }
