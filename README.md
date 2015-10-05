@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/benschw/srv-lb.svg)](https://travis-ci.org/benschw/srv-lb)
 [![GoDoc](http://godoc.org/github.com/benschw/srv-lb?status.png)](http://godoc.org/github.com/benschw/srv-lb)
 
+
 # SRV Record Load Balancer for Go
 
 Selects a `SRV` record answer according to specified load balancer algorithm,
