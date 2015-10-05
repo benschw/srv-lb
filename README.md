@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/benschw/srv-lb.svg)](https://travis-ci.org/benschw/srv-lb)
+[![Build Status](https://img.shields.io/codeship/b556c2e0-4dc7-0133-eaf7-524cf6105349.svg)](https://codeship.com/projects/106694)
 [![GoDoc](http://godoc.org/github.com/benschw/srv-lb?status.png)](http://godoc.org/github.com/benschw/srv-lb)
 
 
