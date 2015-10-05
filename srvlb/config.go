@@ -1,6 +1,10 @@
 package srvlb
 
-import "github.com/benschw/srv-lb/dns"
+import (
+	"os"
+
+	"github.com/benschw/srv-lb/dns"
+)
 
 type LoadBalancerStrategy int
 
@@ -15,8 +19,16 @@ type Config struct {
 }
 
 func DefaultConfig() *Config {
+	var dnsLib dns.Lookup
+
+	if dnsHost := os.Getenv("SRVLB_HOST"); dnsHost != "" {
+		dnsLib = dns.NewLookupLib(dnsHost)
+	} else {
+		dnsLib = dns.NewDefaultLookupLib()
+	}
+
 	return &Config{
-		Dns:      dns.NewDefaultLookupLib(),
+		Dns:      dnsLib,
 		Strategy: RoundRobin,
 	}
 }
