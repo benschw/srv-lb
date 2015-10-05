@@ -4,6 +4,11 @@
 
 # SRV Record Load Balancer for Go
 
+`SRV-Lb` is a load balancer designed for use with service discovery solutions
+that expose a discovery interface of DNS SRV records
+(e.g. [consul](https://consul.io/) or [skyDNS](https://github.com/skynetservices/skydns))
+
+
 Selects a `SRV` record answer according to specified load balancer algorithm,
 then resolves its `A` record to an ip, and returns an `Address` structure:
 
@@ -13,8 +18,12 @@ then resolves its `A` record to an ip, and returns an `Address` structure:
 	}
 
 
+You can either default to using the resolv.conf from your system, specifying it 
+when configuring the library, or set it as an ENV variable (e.g. `SRVLB_HOST=127.0.0.1:8600`)
+
 ## Example:
-	
+### Use Defaults
+
 	srvName := "foo.service.fligl.io"
 	lb := srvlb.New(srvName)
 
@@ -32,8 +41,8 @@ then resolves its `A` record to an ip, and returns an `Address` structure:
 ### or configure explicitely
 
 	srvName := "foo.service.fligl.io"
-	lbDriver := srvlb.NewDriver(&Config{
-		Dns:      dns.NewDefaultLookupLib(),
+	lbDriver := srvlb.NewDriver(&srvlb.Config{
+		Dns:      dns.NewLookupLib("127.0.0.1:8600"),
 		Strategy: RoundRobin,
 	})
 	lb := &srvlb.SRVLoadBalancer{Lb: lbDriver, Address: srvName}
@@ -51,7 +60,7 @@ then resolves its `A` record to an ip, and returns an `Address` structure:
 ## Development
 tests are run against some fixture dns entries I set up on fligl.io (`dig foo.service.fligl.io SRV`).
 
-	go get -u -t
+	go get -u -t ./...
 	go test ./...
 
 	
