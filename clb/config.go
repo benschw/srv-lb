@@ -2,21 +2,21 @@ package clb
 
 import "github.com/benschw/dns-clb/dns"
 
-type LoadBalancerType int
+type LoadBalancerStrategy int
 
 const (
-	Random     LoadBalancerType = iota
-	RoundRobin LoadBalancerType = iota
+	Random     LoadBalancerStrategy = iota
+	RoundRobin LoadBalancerStrategy = iota
 )
 
 type Config struct {
-	Dns              dns.Lookup
-	LoadBalancerType LoadBalancerType
+	Dns      dns.Lookup
+	Strategy LoadBalancerStrategy
 }
 
 func DefaultConfig() *Config {
 	return &Config{
-		Dns:              dns.NewDefaultLookupLib(),
-		LoadBalancerType: RoundRobin,
+		Dns:      dns.NewDefaultLookupLib(),
+		Strategy: RoundRobin,
 	}
 }

@@ -20,7 +20,7 @@ type RoundRobinClb struct {
 	i      int
 }
 
-func (lb *RoundRobinClb) GetAddress(name string) (dns.Address, error) {
+func (lb *RoundRobinClb) Next(name string) (dns.Address, error) {
 	add := dns.Address{}
 
 	srvs, err := lb.dnsLib.LookupSRV(name)

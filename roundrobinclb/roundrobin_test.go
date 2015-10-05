@@ -15,12 +15,11 @@ var _ = log.Print // For debugging; delete when done.
 func TestRoundRobinLookup(t *testing.T) {
 	// given
 	srvName := "foo.service.fligl.io"
-
 	lib := dns.NewDefaultLookupLib()
 	c := New(lib)
 
 	// when
-	address, err := c.GetAddress(srvName)
+	address, err := c.Next(srvName)
 
 	// then
 	assert.Nil(t, err)

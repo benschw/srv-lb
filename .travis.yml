@@ -1,12 +1,12 @@
 language: go
-go: 1.2
+
+go:
+  - 1.4
+  - 1.5
+  - tip
 
 install:
-- make deps
+  - go get -t
 
 script:
-- make test
-
-
-
-#consul agent -server -bootstrap -data-dir /tmp/consul -node=consul1 -bind 0.0.0.0
+  - go test ./...

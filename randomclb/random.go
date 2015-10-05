@@ -17,7 +17,7 @@ type RandomClb struct {
 	dnsLib dns.Lookup
 }
 
-func (lb *RandomClb) GetAddress(name string) (dns.Address, error) {
+func (lb *RandomClb) Next(name string) (dns.Address, error) {
 	add := dns.Address{}
 
 	srvs, err := lb.dnsLib.LookupSRV(name)

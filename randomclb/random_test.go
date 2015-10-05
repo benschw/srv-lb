@@ -20,7 +20,7 @@ func TestRandomLookup(t *testing.T) {
 	c := New(lib)
 
 	// when
-	address, err := c.GetAddress(srvName)
+	address, err := c.Next(srvName)
 
 	// then
 	assert.Nil(t, err)
