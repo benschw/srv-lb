@@ -6,7 +6,7 @@ go:
   - tip
 
 install:
-    - go get -u -t
+  - go get -u -t ./...
 
 script:
   - go test ./...
