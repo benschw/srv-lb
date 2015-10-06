@@ -9,7 +9,7 @@ import (
 
 // Example load balancer with defaults
 func ExampleNew() {
-	lb := New("foo.service.fligl.io")
+	lb := New(DefaultConfig(), "foo.service.fligl.io")
 
 	address, err := lb.Next()
 	if err != nil {
@@ -23,7 +23,7 @@ func ExampleNew() {
 // Example of configuring a driver and using with a load balancer
 func ExampleNewDriver() {
 	srvName := "foo.service.fligl.io"
-	lbDriver := NewDriver(&Config{
+	lbDriver := NewGeneric(&Config{
 		Dns:      dns.NewDefaultLookupLib(),
 		Strategy: RoundRobin,
 	})
@@ -48,7 +48,7 @@ func ExampleNewDriver() {
 
 func TestRoundRobinFacade(t *testing.T) {
 	//given
-	c := NewDriver(&Config{
+	c := NewGeneric(&Config{
 		Dns:      dns.NewDefaultLookupLib(),
 		Strategy: RoundRobin,
 	})
@@ -65,7 +65,7 @@ func TestRoundRobinFacade(t *testing.T) {
 
 func TestRandomFacade(t *testing.T) {
 	//given
-	c := NewDriver(&Config{
+	c := NewGeneric(&Config{
 		Dns:      dns.NewDefaultLookupLib(),
 		Strategy: Random,
 	})

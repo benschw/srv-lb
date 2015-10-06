@@ -6,11 +6,11 @@ import (
 	"github.com/benschw/srv-lb/roundrobinclb"
 )
 
-type SRVLoadBalancerDriver interface {
+type GenericLoadBalancer interface {
 	Next(name string) (dns.Address, error)
 }
 
-func NewDriver(cfg *Config) SRVLoadBalancerDriver {
+func NewGeneric(cfg *Config) GenericLoadBalancer {
 	switch cfg.Strategy {
 	case RoundRobin:
 		return roundrobinclb.New(cfg.Dns)

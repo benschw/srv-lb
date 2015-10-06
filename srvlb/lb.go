@@ -6,9 +6,9 @@ type LoadBalancer interface {
 	Next() (dns.Address, error)
 }
 
-func New(address string) LoadBalancer {
+func New(cfg *Config, address string) LoadBalancer {
 	return &SRVLoadBalancer{
-		Lb:      NewDriver(DefaultConfig()),
+		Lb:      NewGeneric(cfg),
 		Address: address,
 	}
 }

@@ -25,7 +25,7 @@ when configuring the library, or set it as an ENV variable (e.g. `SRVLB_HOST=127
 ### Use Defaults
 
 	srvName := "foo.service.fligl.io"
-	lb := srvlb.New(srvName)
+	lb := srvlb.New(srvLib.DefaultConfig(), srvName)
 
 	address, err := lb.Next()
 	if err != nil {
@@ -41,7 +41,7 @@ when configuring the library, or set it as an ENV variable (e.g. `SRVLB_HOST=127
 ### or configure explicitely
 
 	srvName := "foo.service.fligl.io"
-	lbDriver := srvlb.NewDriver(&srvlb.Config{
+	lbDriver := srvlb.NewGeneric(&srvlb.Config{
 		Dns:      dns.NewLookupLib("127.0.0.1:8600"),
 		Strategy: RoundRobin,
 	})
