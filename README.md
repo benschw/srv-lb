@@ -5,7 +5,7 @@
 # SRV Record Load Balancer library for Go
 
 _SRV-LB_ is a load balancer library designed for use with service discovery solutions
-that expose a discovery interface of DNS SRV records
+that expose an interface through DNS SRV records
 (e.g. [consul](https://consul.io/) or [skyDNS](https://github.com/skynetservices/skydns))
 
 
