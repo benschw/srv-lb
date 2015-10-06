@@ -14,7 +14,7 @@ func New(cfg *Config, address string) LoadBalancer {
 }
 
 type SRVLoadBalancer struct {
-	Lb      SRVLoadBalancerDriver
+	Lb      GenericLoadBalancer
 	Address string
 }
 
