@@ -1,4 +1,4 @@
-package srvlb
+package lb
 
 import (
 	"fmt"
@@ -21,7 +21,7 @@ func ExampleNew() {
 }
 
 // Example of configuring a driver and using with a load balancer
-func ExampleNewDriver() {
+func ExampleNewGeneric() {
 	srvName := "foo.service.fligl.io"
 	lbDriver := NewGeneric(&Config{
 		Dns:      dns.NewDefaultLookupLib(),

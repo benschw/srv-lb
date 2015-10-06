@@ -1,4 +1,4 @@
-package srvlb
+package lb
 
 import (
 	"os"
