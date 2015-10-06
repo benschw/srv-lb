@@ -81,7 +81,12 @@ tests are run against some fixture dns entries I set up on fligl.io (`dig foo.se
 	
 ## Build your own load balancing strategy
 
-[see "random" example](https://github.com/benschw/srv-lb/blob/master/strategy/random/random.go)
+`srv-lb` leverages go's `init()` function to allow you to use your own
+load balancer strategy without forming the core library. Below is a walkthrough
+of how to create your own "FancyLB" strategy. For a complete example, [see how the "random" strategy is implemented](https://github.com/benschw/srv-lb/blob/master/strategy/random/random.go).
+
+_(The default strategy, `RoundRobin`, is registered slightly differently to avoid import cycles)_
+
 
 Give your strategy a unique identifier
 
