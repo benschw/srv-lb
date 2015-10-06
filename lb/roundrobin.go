@@ -9,7 +9,7 @@ import (
 	"github.com/benschw/srv-lb/dns"
 )
 
-var RoundRobinStrategy StrategyType = "round-robin"
+const RoundRobinStrategy StrategyType = "round-robin"
 
 func NewRoundRobinStrategy(lib dns.Lookup) GenericLoadBalancer {
 	return &RoundRobinClb{
