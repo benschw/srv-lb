@@ -18,8 +18,10 @@ then resolves its `A` record to an ip, and returns an `Address` structure:
 	}
 
 
-You can either default to using the resolv.conf from your system, specifying it 
-when configuring the library, or set it as an ENV variable (e.g. `SRVLB_HOST=127.0.0.1:8600`)
+When selecting a DNS server, you can default to using the value from your
+system's resolv.conf, specify it explicitely when configuring the library,
+or set it as an ENV variable (e.g. `SRVLB_HOST=127.0.0.1:8600` to connect to a
+local consul agent) at run time.
 
 ## Example:
 ### Default Load Balancer
