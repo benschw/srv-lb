@@ -25,9 +25,9 @@ when configuring the library, or set it as an ENV variable (e.g. `SRVLB_HOST=127
 ### Default Load Balancer
 
 	srvName := "foo.service.fligl.io"
-	lb := lb.New(lb.DefaultConfig(), srvName)
+	l := lb.New(lb.DefaultConfig(), srvName)
 
-	address, err := lb.Next()
+	address, err := l.Next()
 	if err != nil {
 		panic(err)
 	}
@@ -42,9 +42,9 @@ when configuring the library, or set it as an ENV variable (e.g. `SRVLB_HOST=127
 ### or build a generic load balancer
 
 	srvName := "foo.service.fligl.io"
-	lbDriver := lb.NewGeneric(lb.DefaultConfig())
+	l := lb.NewGeneric(lb.DefaultConfig())
 
-	address, err := lb.Next(srvName)
+	address, err := l.Next(srvName)
 	if err != nil {
 		panic(err)
 	}
@@ -57,11 +57,11 @@ when configuring the library, or set it as an ENV variable (e.g. `SRVLB_HOST=127
 	srvName := "foo.service.fligl.io"
 	cfg := &lb.Config{
 		Dns:      dns.NewLookupLib("127.0.0.1:8600"),
-		Strategy: RoundRobin,
+		Strategy: random.RandomStrategy,
 	}
-	lb := lb.New(cfg, srvName)
+	l := l.New(cfg, srvName)
 
-	address, err := lb.Next()
+	address, err := l.Next()
 	if err != nil {
 		panic(err)
 	}

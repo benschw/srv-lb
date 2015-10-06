@@ -5,9 +5,12 @@ import (
 	"math/rand"
 
 	"github.com/benschw/srv-lb/dns"
+	"github.com/benschw/srv-lb/lb"
 )
 
-func New(lib dns.Lookup) *RandomClb {
+const RandomStrategy lb.StrategyType = "random"
+
+func New(lib dns.Lookup) lb.GenericLoadBalancer {
 	lb := new(RandomClb)
 	lb.dnsLib = lib
 	return lb
@@ -37,4 +40,8 @@ func (lb *RandomClb) Next(name string) (dns.Address, error) {
 	}
 
 	return dns.Address{Address: ip, Port: srv.Port}, nil
+}
+
+func init() {
+	lb.RegisterStrategy(RandomStrategy, New)
 }

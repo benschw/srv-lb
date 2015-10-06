@@ -6,16 +6,9 @@ import (
 	"github.com/benschw/srv-lb/dns"
 )
 
-type LoadBalancerStrategy int
-
-const (
-	Random     LoadBalancerStrategy = iota
-	RoundRobin LoadBalancerStrategy = iota
-)
-
 type Config struct {
 	Dns      dns.Lookup
-	Strategy LoadBalancerStrategy
+	Strategy StrategyType
 }
 
 func DefaultConfig() *Config {
@@ -29,6 +22,6 @@ func DefaultConfig() *Config {
 
 	return &Config{
 		Dns:      dnsLib,
-		Strategy: RoundRobin,
+		Strategy: RoundRobinStrategy,
 	}
 }

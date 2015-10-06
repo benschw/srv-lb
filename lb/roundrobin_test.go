@@ -1,4 +1,4 @@
-package roundrobin
+package lb
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ func TestRoundRobinLookup(t *testing.T) {
 	// given
 	srvName := "foo.service.fligl.io"
 	lib := dns.NewDefaultLookupLib()
-	c := New(lib)
+	c := NewRoundRobinStrategy(lib)
 
 	// when
 	address, err := c.Next(srvName)
