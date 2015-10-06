@@ -9,8 +9,8 @@ that expose a discovery interface of DNS SRV records
 (e.g. [consul](https://consul.io/) or [skyDNS](https://github.com/skynetservices/skydns))
 
 
-Selects a `SRV` record answer according to specified load balancer algorithm,
-then resolves its `A` record to an ip, and returns an `Address` structure:
+The library selects a `SRV` record answer according to specified load balancer algorithm,
+resolves its `A` record to an ip, and returns an `Address` structure:
 
 	type Address struct {
 		Address string
@@ -21,6 +21,10 @@ then resolves its `A` record to an ip, and returns an `Address` structure:
 To select a DNS server you can us the value from your system's `resolv.conf` (the default),
 specify it explicitely when configuring the library,
 or set it as an ENV variable (e.g. `SRVLB_HOST=127.0.0.1:8600` to connect to a local consul agent) at run time.
+
+
+The library defaults to use a "Round Robin" algorithm, but you can specify another or build your own (see below).
+
 
 ## Example:
 ### Default Load Balancer
