@@ -20,16 +20,15 @@ func ExampleNew() {
 	// Output: 0.1.2.3:8001
 }
 
-// Example of configuring a driver and using with a load balancer
+// Example of using a generic load balancer with custom configuration
 func ExampleNewGeneric() {
 	srvName := "foo.service.fligl.io"
-	lbDriver := NewGeneric(&Config{
+	lb := NewGeneric(&Config{
 		Dns:      dns.NewDefaultLookupLib(),
 		Strategy: RoundRobin,
 	})
-	lb := &SRVLoadBalancer{Lb: lbDriver, Address: srvName}
 
-	address, err := lb.Next()
+	address, err := lb.Next(srvName)
 	if err != nil {
 		fmt.Print(err)
 	}
@@ -37,7 +36,7 @@ func ExampleNewGeneric() {
 	if address.Port == 8001 {
 		fmt.Printf("%s", address)
 	} else {
-		address2, err := lb.Next()
+		address2, err := lb.Next(srvName)
 		if err != nil {
 			fmt.Print(err)
 		}
