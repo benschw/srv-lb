@@ -59,7 +59,7 @@ when configuring the library, or set it as an ENV variable (e.g. `SRVLB_HOST=127
 		Dns:      dns.NewLookupLib("127.0.0.1:8600"),
 		Strategy: random.RandomStrategy,
 	}
-	l := l.New(cfg, srvName)
+	l := lb.New(cfg, srvName)
 
 	address, err := l.Next()
 	if err != nil {
@@ -78,16 +78,31 @@ tests are run against some fixture dns entries I set up on fligl.io (`dig foo.se
 	go test ./...
 
 	
+## Build your own load balancing strategy
+
+[see "random" example](https://github.com/benschw/srv-lb/blob/master/strategy/random/random.go)
+
+Give your strategy a unique identifier
+
+	const FancyStrategy lb.StrategyType = "fancy"
+
+Create a factory (and your implementation of `GenericLoadBalancer`)
+
+	func New(lib dns.Lookup) lb.GenericLoadBalancer {
+		return &FancyLB{Dns: lib}
+	}
+
+Register it with the load balancer
+
+	func init() {
+		lb.RegisterStrategy(FancyStrategy, New)
+	}
 
 
+And then specify it when constructing your load balancer
 
-
-## Development
-tests are run against some fixture dns entries I set up on fligl.io (`dig foo.service.fligl.io SRV`).
-
-	go get -u -t ./...
-	go test ./...
-
+	cfg := lb.DefaultConfig()
+	cfg.Strategy = fancy.FancyStrategy
 	
-
+	l := lb.New(cfg, srvName)
 
