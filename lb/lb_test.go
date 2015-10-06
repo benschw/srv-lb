@@ -2,22 +2,44 @@ package lb
 
 import (
 	"fmt"
+	"sort"
 	"testing"
 
 	"github.com/benschw/srv-lb/dns"
+	"github.com/stretchr/testify/assert"
 )
+
+type ByConnectionString []dns.Address
+
+func (a ByConnectionString) Len() int      { return len(a) }
+func (a ByConnectionString) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a ByConnectionString) Less(i, j int) bool {
+	if a[i].Address == a[j].Address {
+		return a[i].Port < a[j].Port
+	}
+	return a[i].Address < a[j].Address
+}
 
 // Example load balancer with defaults
 func ExampleNew() {
 	lb := New(DefaultConfig(), "foo.service.fligl.io")
 
-	address, err := lb.Next()
+	add1, err := lb.Next()
+	if err != nil {
+		panic(err)
+	}
+	add2, err := lb.Next()
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("%s", address.String())
-	// Output: 0.1.2.3:8001
+	adds := []dns.Address{add1, add2}
+	sort.Sort(ByConnectionString(adds))
+
+	fmt.Printf("%s\n%s", adds[0], adds[1])
+	// Output:
+	// 0.1.2.3:8001
+	// 4.5.6.7:8002
 }
 
 // Example of using a generic load balancer with custom configuration
@@ -28,21 +50,22 @@ func ExampleNewGeneric() {
 		Strategy: RoundRobin,
 	})
 
-	address, err := lb.Next(srvName)
+	add1, err := lb.Next(srvName)
 	if err != nil {
-		fmt.Print(err)
+		panic(err)
+	}
+	add2, err := lb.Next(srvName)
+	if err != nil {
+		panic(err)
 	}
 
-	if address.Port == 8001 {
-		fmt.Printf("%s", address)
-	} else {
-		address2, err := lb.Next(srvName)
-		if err != nil {
-			fmt.Print(err)
-		}
-		fmt.Printf("%s", address2)
-	}
-	// Output: 0.1.2.3:8001
+	adds := []dns.Address{add1, add2}
+	sort.Sort(ByConnectionString(adds))
+
+	fmt.Printf("%s\n%s", adds[0], adds[1])
+	// Output:
+	// 0.1.2.3:8001
+	// 4.5.6.7:8002
 }
 
 func TestRoundRobinFacade(t *testing.T) {
@@ -54,12 +77,18 @@ func TestRoundRobinFacade(t *testing.T) {
 
 	// when
 	srvName := "foo.service.fligl.io"
-	_, err := c.Next(srvName)
+	add1, err1 := c.Next(srvName)
+	add2, err2 := c.Next(srvName)
 
 	// then
-	if err != nil {
-		t.Error(err)
-	}
+	assert.Nil(t, err1)
+	assert.Nil(t, err2)
+
+	adds := []dns.Address{add1, add2}
+	sort.Sort(ByConnectionString(adds))
+
+	expected := []dns.Address{dns.Address{Address: "0.1.2.3", Port: 8001}, dns.Address{Address: "4.5.6.7", Port: 8002}}
+	assert.Equal(t, expected, adds, "unexpected results")
 }
 
 func TestRandomFacade(t *testing.T) {
@@ -74,7 +103,5 @@ func TestRandomFacade(t *testing.T) {
 	_, err := c.Next(srvName)
 
 	// then
-	if err != nil {
-		t.Error(err)
-	}
+	assert.Nil(t, err)
 }
