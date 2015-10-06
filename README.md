@@ -22,7 +22,7 @@ You can either default to using the resolv.conf from your system, specifying it
 when configuring the library, or set it as an ENV variable (e.g. `SRVLB_HOST=127.0.0.1:8600`)
 
 ## Example:
-### Use Defaults
+### Default Load Balancer
 
 	srvName := "foo.service.fligl.io"
 	lb := lb.New(lb.DefaultConfig(), srvName)
@@ -38,14 +38,28 @@ when configuring the library, or set it as an ENV variable (e.g. `SRVLB_HOST=127
 - Uses dns server configured in `/etc/resolv.conf`
 - Uses round robin strategy
 
+
+### or build a generic load balancer
+
+	srvName := "foo.service.fligl.io"
+	lbDriver := lb.NewGeneric(lb.DefaultConfig())
+
+	address, err := lb.Next(srvName)
+	if err != nil {
+		panic(err)
+	}
+	
+	fmt.Printf("%s", address.String())
+	// Output: 0.1.2.3:8001
+
 ### or configure explicitely
 
 	srvName := "foo.service.fligl.io"
-	lbDriver := lb.NewGeneric(&lb.Config{
+	cfg := &lb.Config{
 		Dns:      dns.NewLookupLib("127.0.0.1:8600"),
 		Strategy: RoundRobin,
-	})
-	lb := &lb.SRVLoadBalancer{Lb: lbDriver, Address: srvName}
+	}
+	lb := lb.New(cfg, srvName)
 
 	address, err := lb.Next()
 	if err != nil {
@@ -54,6 +68,17 @@ when configuring the library, or set it as an ENV variable (e.g. `SRVLB_HOST=127
 	
 	fmt.Printf("%s", address.String())
 	// Output: 0.1.2.3:8001
+
+
+
+## Development
+tests are run against some fixture dns entries I set up on fligl.io (`dig foo.service.fligl.io SRV`).
+
+	go get -u -t ./...
+	go test ./...
+
+	
+
 
 
 
