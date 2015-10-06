@@ -2,7 +2,7 @@
 [![GoDoc](http://godoc.org/github.com/benschw/srv-lb?status.png)](http://godoc.org/github.com/benschw/srv-lb/lb)
 
 
-# SRV Record Load Balancer for Go
+# SRV Record Load Balancer library for Go
 
 `SRV-Lb` is a load balancer designed for use with service discovery solutions
 that expose a discovery interface of DNS SRV records
