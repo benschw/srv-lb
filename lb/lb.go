@@ -2,8 +2,8 @@ package lb
 
 import (
 	"github.com/benschw/srv-lb/dns"
-	"github.com/benschw/srv-lb/randomclb"
-	"github.com/benschw/srv-lb/roundrobinclb"
+	"github.com/benschw/srv-lb/strategy/random"
+	"github.com/benschw/srv-lb/strategy/roundrobin"
 )
 
 // Load balancer that can service request for any SRV record address
@@ -14,9 +14,9 @@ type GenericLoadBalancer interface {
 func NewGeneric(cfg *Config) GenericLoadBalancer {
 	switch cfg.Strategy {
 	case RoundRobin:
-		return roundrobinclb.New(cfg.Dns)
+		return roundrobin.New(cfg.Dns)
 	case Random:
-		return randomclb.New(cfg.Dns)
+		return random.New(cfg.Dns)
 	}
 	panic("Unknown load balancer strategy")
 }

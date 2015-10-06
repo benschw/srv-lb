@@ -1,4 +1,4 @@
-package roundrobinclb
+package roundrobin
 
 import "github.com/benschw/srv-lb/dns"
 

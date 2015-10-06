@@ -1,4 +1,4 @@
-package randomclb
+package random
 
 import (
 	"fmt"

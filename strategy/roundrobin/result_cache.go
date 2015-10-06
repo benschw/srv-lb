@@ -1,4 +1,4 @@
-package roundrobinclb
+package roundrobin
 
 import (
 	"fmt"
