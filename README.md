@@ -53,7 +53,7 @@ or set it as an ENV variable (e.g. `SRVLB_HOST=127.0.0.1:8600` to connect to a l
 	fmt.Printf("%s", address.String())
 	// Output: 0.1.2.3:8001
 
-### or configure explicitely
+### or configure explicitly
 
 	srvName := "foo.service.fligl.io"
 	cfg := &lb.Config{
