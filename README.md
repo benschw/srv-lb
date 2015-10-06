@@ -18,8 +18,8 @@ resolves its `A` record to an ip, and returns an `Address` structure:
 	}
 
 
-To select a DNS server you can us the value from your system's `resolv.conf` (the default),
-specify it explicitely when configuring the library,
+To select a DNS server you can use the value from your system's `resolv.conf` (the default),
+specify it explicitly when configuring the library,
 or set it as an ENV variable (e.g. `SRVLB_HOST=127.0.0.1:8600` to connect to a local consul agent) at run time.
 
 
@@ -117,3 +117,7 @@ And then specify it when constructing your load balancer
 	
 	l := lb.New(cfg, srvName)
 
+
+## Projects Using SRV-LB
+
+- [chinchilla](https://github.com/benschw/chinchilla) - a rabbitmq to REST bridge
