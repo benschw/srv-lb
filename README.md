@@ -90,6 +90,8 @@ load balancer strategy without forking the core library. Below is a walkthrough
 of how to create your own "FancyLB" strategy. For a complete example,
 [see how the "random" strategy is implemented](https://github.com/benschw/srv-lb/blob/master/strategy/random/random.go).
 
+Of course, if your strategy would be generally usefull I would lolve a pull request!
+
 _The default strategy, `RoundRobin`, is registered slightly differently to avoid import cycles, so avoid using it as an example_
 
 
