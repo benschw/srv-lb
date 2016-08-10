@@ -103,6 +103,7 @@ func (s *ResultCache) mergeResults(oldResults []net.SRV, newResults []net.SRV) (
 
 func (s *ResultCache) getNextResult(key string) (net.SRV, error) {
 	var srv net.SRV
+
 	srvs := s.m[key].srvs
 	i := s.m[key].i
 
@@ -111,11 +112,11 @@ func (s *ResultCache) getNextResult(key string) (net.SRV, error) {
 	}
 
 	if len(srvs) <= i {
-		i = 0
+		i = i % len(srvs)
 	}
 
 	srv = srvs[i]
-	s.m[key].i += 1
+	s.m[key].i = i + 1
 
 	return srv, nil
 }
