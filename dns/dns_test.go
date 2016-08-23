@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLookupShoudFailWithBadNS(t *testing.T) {
+func TestLookupShouldFailWithBadNS(t *testing.T) {
 	lib := NewLookupLib("foo:9999")
 
 	_, err := lib.LookupA("foo")
@@ -16,7 +16,7 @@ func TestLookupShoudFailWithBadNS(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
-func TestLookupShoudFailWithBadHost(t *testing.T) {
+func TestLookupShouldFailWithBadHost(t *testing.T) {
 	lib := NewLookupLib("8.8.8.8:53")
 
 	_, err := lib.LookupA("foo")
