@@ -12,12 +12,15 @@ type Lookup interface {
 	LookupA(name string) (string, error)
 }
 
-func NewDefaultLookupLib() Lookup {
-	config, _ := dns.ClientConfigFromFile("/etc/resolv.conf")
+func NewDefaultLookupLib() (Lookup, error) {
+	config, err := dns.ClientConfigFromFile("/etc/resolv.conf")
+	if err != nil {
+		return nil, err
+	}
 	serverString := config.Servers[0] + ":" + config.Port
 	l := new(lookupLib)
 	l.serverString = serverString
-	return l
+	return l, nil
 }
 func NewLookupLib(serverString string) Lookup {
 	l := new(lookupLib)

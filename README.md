@@ -30,7 +30,12 @@ The library defaults to use a "Round Robin" algorithm, but you can specify anoth
 ### Default Load Balancer
 
 	srvName := "foo.service.fligl.io"
-	l := lb.New(lb.DefaultConfig(), srvName)
+	cfg, err := lb.DefaultConfig()
+	if err != nil {
+		panic(err)
+	}
+
+	l := lb.New(cfg, srvName)
 
 	address, err := l.Next()
 	if err != nil {
@@ -47,7 +52,12 @@ The library defaults to use a "Round Robin" algorithm, but you can specify anoth
 ### or build a generic load balancer
 
 	srvName := "foo.service.fligl.io"
-	l := lb.NewGeneric(lb.DefaultConfig())
+	cfg, err := lb.DefaultConfig()
+	if err != nil {
+		panic(err)
+	}
+
+	l := lb.NewGeneric(cfg)
 
 	address, err := l.Next(srvName)
 	if err != nil {
@@ -114,7 +124,7 @@ Register it with the load balancer
 
 And then specify it when constructing your load balancer
 
-	cfg := lb.DefaultConfig()
+	cfg, _ := lb.DefaultConfig()
 	cfg.Strategy = fancy.FancyStrategy
 	
 	l := lb.New(cfg, srvName)

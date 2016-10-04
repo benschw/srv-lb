@@ -36,7 +36,8 @@ func TestLookupShouldResolveARecord(t *testing.T) {
 }
 
 func TestDefaultLookupA(t *testing.T) {
-	lib := NewDefaultLookupLib()
+	lib, err := NewDefaultLookupLib()
+	assert.Nil(t, err)
 
 	address, err := lib.LookupA("github.com")
 
@@ -47,7 +48,8 @@ func TestDefaultLookupA(t *testing.T) {
 }
 
 func TestDefaultLookupSRV(t *testing.T) {
-	lib := NewDefaultLookupLib()
+	lib, err := NewDefaultLookupLib()
+	assert.Nil(t, err)
 
 	addresses, err := lib.LookupSRV("foo.service.fligl.io")
 
