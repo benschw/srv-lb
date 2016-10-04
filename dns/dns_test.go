@@ -63,11 +63,33 @@ func TestDefaultLookupSRV(t *testing.T) {
 	assert.Equal(t, "foo2.fligl.io.", addresses[1].Target, "Unexpected Result")
 }
 
+func TestLookUpShouldSkipBadNS(t *testing.T) {
+	lib, err := NewClientConfigLookupLib(&firstNSBadClientConfig{})
+
+	assert.Nil(t, err)
+
+	address, err := lib.LookupA("github.com")
+
+	assert.Nil(t, err)
+
+	ip := net.ParseIP(address)
+	assert.NotNil(t, ip.To4())
+}
+
 type predictableClientConfig struct{}
 
 func (c *predictableClientConfig) Get() (*dns.ClientConfig, error) {
 	return &dns.ClientConfig{
 		Servers: []string{"8.8.8.8", "8.8.4.4"},
+		Port:    "53",
+	}, nil
+}
+
+type firstNSBadClientConfig struct{}
+
+func (c *firstNSBadClientConfig) Get() (*dns.ClientConfig, error) {
+	return &dns.ClientConfig{
+		Servers: []string{"foo", "8.8.8.8"},
 		Port:    "53",
 	}, nil
 }
