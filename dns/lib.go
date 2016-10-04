@@ -12,8 +12,24 @@ type Lookup interface {
 	LookupA(name string) (string, error)
 }
 
+type ClientConfig interface {
+	Get() (*dns.ClientConfig, error)
+}
+
+type ResolvConfClientConfig struct {
+	File string
+}
+
+func (f *ResolvConfClientConfig) Get() (*dns.ClientConfig, error) {
+	return dns.ClientConfigFromFile(f.File)
+}
+
 func NewDefaultLookupLib() (Lookup, error) {
-	config, err := dns.ClientConfigFromFile("/etc/resolv.conf")
+	return NewClientConfigLookupLib(&ResolvConfClientConfig{"/etc/resolv.conf"})
+}
+
+func NewClientConfigLookupLib(cfg ClientConfig) (Lookup, error) {
+	config, err := cfg.Get()
 	if err != nil {
 		return nil, err
 	}
@@ -22,6 +38,7 @@ func NewDefaultLookupLib() (Lookup, error) {
 	l.serverString = serverString
 	return l, nil
 }
+
 func NewLookupLib(serverString string) Lookup {
 	l := new(lookupLib)
 	l.serverString = serverString
