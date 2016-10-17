@@ -22,9 +22,12 @@ func (a ByConnectionString) Less(i, j int) bool {
 }
 
 func TestRoundRobinStrategy(t *testing.T) {
+	lib, err := dns.NewDefaultLookupLib()
+	assert.Nil(t, err)
+
 	//given
 	c := lb.NewGeneric(&lb.Config{
-		Dns:      dns.NewDefaultLookupLib(),
+		Dns:      lib,
 		Strategy: lb.RoundRobinStrategy,
 	})
 
@@ -45,15 +48,18 @@ func TestRoundRobinStrategy(t *testing.T) {
 }
 
 func TestRandomStrategy(t *testing.T) {
+	lib, err := dns.NewDefaultLookupLib()
+	assert.Nil(t, err)
+
 	//given
 	c := lb.NewGeneric(&lb.Config{
-		Dns:      dns.NewDefaultLookupLib(),
+		Dns:      lib,
 		Strategy: random.RandomStrategy,
 	})
 
 	// when
 	srvName := "foo.service.fligl.io"
-	_, err := c.Next(srvName)
+	_, err = c.Next(srvName)
 
 	// then
 	assert.Nil(t, err)

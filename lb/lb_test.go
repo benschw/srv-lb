@@ -20,7 +20,11 @@ func (a ByConnectionString) Less(i, j int) bool {
 
 // Example load balancer with defaults
 func ExampleNew() {
-	lb := New(DefaultConfig(), "foo.service.fligl.io")
+	cfg, err := DefaultConfig()
+	if err != nil {
+		panic(err)
+	}
+	lb := New(cfg, "foo.service.fligl.io")
 
 	add1, err := lb.Next()
 	if err != nil {
@@ -43,7 +47,11 @@ func ExampleNew() {
 // Example of using a generic load balancer
 func ExampleNewGeneric() {
 	srvName := "foo.service.fligl.io"
-	lb := NewGeneric(DefaultConfig())
+	cfg, err := DefaultConfig()
+	if err != nil {
+		panic(err)
+	}
+	lb := NewGeneric(cfg)
 
 	add1, err := lb.Next(srvName)
 	if err != nil {

@@ -13,9 +13,11 @@ var _ = fmt.Print // For debugging; delete when done.
 var _ = log.Print // For debugging; delete when done.
 
 func TestRoundRobinLookup(t *testing.T) {
+	lib, err := dns.NewDefaultLookupLib()
+	assert.Nil(t, err)
+
 	// given
 	srvName := "foo.service.fligl.io"
-	lib := dns.NewDefaultLookupLib()
 	c := NewRoundRobinStrategy(lib)
 
 	// when

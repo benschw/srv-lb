@@ -1,6 +1,7 @@
 package dns
 
 import (
+	"errors"
 	"fmt"
 	"net"
 
@@ -12,24 +13,46 @@ type Lookup interface {
 	LookupA(name string) (string, error)
 }
 
-func NewDefaultLookupLib() *LookupLib {
-	config, _ := dns.ClientConfigFromFile("/etc/resolv.conf")
-	serverString := config.Servers[0] + ":" + config.Port
-	l := new(LookupLib)
-	l.serverString = serverString
-	return l
+type ClientConfig interface {
+	Get() (*dns.ClientConfig, error)
 }
-func NewLookupLib(serverString string) *LookupLib {
-	l := new(LookupLib)
-	l.serverString = serverString
+
+type ResolvConfClientConfig struct {
+	File string
+}
+
+func (f *ResolvConfClientConfig) Get() (*dns.ClientConfig, error) {
+	return dns.ClientConfigFromFile(f.File)
+}
+
+func NewDefaultLookupLib() (Lookup, error) {
+	return NewClientConfigLookupLib(&ResolvConfClientConfig{"/etc/resolv.conf"})
+}
+
+func NewClientConfigLookupLib(cfg ClientConfig) (Lookup, error) {
+	config, err := cfg.Get()
+	if err != nil {
+		return nil, err
+	}
+	l := new(lookupLib)
+	l.servers = make([]string, len(config.Servers))
+	for i, s := range config.Servers {
+		l.servers[i] = s + ":" + config.Port
+	}
+	return l, nil
+}
+
+func NewLookupLib(serverString string) Lookup {
+	l := new(lookupLib)
+	l.servers = []string{serverString}
 	return l
 }
 
-type LookupLib struct {
-	serverString string
+type lookupLib struct {
+	servers []string
 }
 
-func (l *LookupLib) LookupSRV(name string) ([]net.SRV, error) {
+func (l *lookupLib) LookupSRV(name string) ([]net.SRV, error) {
 	var srvs = make([]net.SRV, 0)
 	answer, err := l.lookupType(name, "SRV")
 	if err != nil {
@@ -38,7 +61,7 @@ func (l *LookupLib) LookupSRV(name string) ([]net.SRV, error) {
 	return l.parseSRVAnswer(answer)
 }
 
-func (l *LookupLib) LookupA(name string) (string, error) {
+func (l *lookupLib) LookupA(name string) (string, error) {
 	answer, err := l.lookupType(name, "A")
 	if err != nil {
 		return "", err
@@ -46,7 +69,7 @@ func (l *LookupLib) LookupA(name string) (string, error) {
 	return l.parseAAnswer(answer)
 }
 
-func (l *LookupLib) parseSRVAnswer(answer *dns.Msg) ([]net.SRV, error) {
+func (l *lookupLib) parseSRVAnswer(answer *dns.Msg) ([]net.SRV, error) {
 	var srvs = make([]net.SRV, 0)
 	for _, v := range answer.Answer {
 		if srv, ok := v.(*dns.SRV); ok {
@@ -61,7 +84,7 @@ func (l *LookupLib) parseSRVAnswer(answer *dns.Msg) ([]net.SRV, error) {
 	return srvs, nil
 }
 
-func (l *LookupLib) parseAAnswer(answer *dns.Msg) (string, error) {
+func (l *lookupLib) parseAAnswer(answer *dns.Msg) (string, error) {
 	if len(answer.Answer) == 0 {
 		return "", fmt.Errorf("Answer Empty")
 	}
@@ -74,12 +97,25 @@ func (l *LookupLib) parseAAnswer(answer *dns.Msg) (string, error) {
 	return "", fmt.Errorf("Could not parse A record")
 }
 
-func (l *LookupLib) lookupType(name string, recordType string) (*dns.Msg, error) {
-	// try a connection with a udp connection first
-	return l.lookup(name, recordType, "")
+func (l *lookupLib) lookupType(name string, recordType string) (*dns.Msg, error) {
+	if len(l.servers) < 1 {
+		return nil, errors.New("No DNS servers configured")
+	}
+
+	var err error
+	for _, s := range l.servers {
+		// try a connection with a udp connection first
+		var msg *dns.Msg
+		msg, err = lookup(s, name, recordType, "")
+		if err == nil {
+			return msg, nil
+		}
+	}
+	// Returns the last error we encountered.
+	return nil, err
 }
 
-func (l *LookupLib) lookup(name string, recordType string, connType string) (*dns.Msg, error) {
+func lookup(server, name string, recordType string, connType string) (*dns.Msg, error) {
 	qType, ok := dns.StringToType[recordType]
 	if !ok {
 		return nil, fmt.Errorf("Invalid type '%s'", recordType)
@@ -91,12 +127,12 @@ func (l *LookupLib) lookup(name string, recordType string, connType string) (*dn
 	msg := &dns.Msg{}
 	msg.SetQuestion(name, qType)
 
-	response, _, err := client.Exchange(msg, l.serverString)
+	response, _, err := client.Exchange(msg, server)
 
 	if err != nil {
 		if connType == "" {
 			// retry lookup with a tcp connection
-			return l.lookup(name, recordType, "tcp")
+			return lookup(server, name, recordType, "tcp")
 		} else {
 			return nil, fmt.Errorf("Couldn't resolve name '%s'", name)
 		}

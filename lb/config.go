@@ -11,17 +11,21 @@ type Config struct {
 	Strategy StrategyType
 }
 
-func DefaultConfig() *Config {
+func DefaultConfig() (*Config, error) {
 	var dnsLib dns.Lookup
 
 	if dnsHost := os.Getenv("SRVLB_HOST"); dnsHost != "" {
 		dnsLib = dns.NewLookupLib(dnsHost)
 	} else {
-		dnsLib = dns.NewDefaultLookupLib()
+		lib, err := dns.NewDefaultLookupLib()
+		if err != nil {
+			return nil, err
+		}
+		dnsLib = lib
 	}
 
 	return &Config{
 		Dns:      dnsLib,
 		Strategy: RoundRobinStrategy,
-	}
+	}, nil
 }
