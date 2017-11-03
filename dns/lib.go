@@ -134,7 +134,7 @@ func lookup(server, name string, recordType string, connType string) (*dns.Msg, 
 			// retry lookup with a tcp connection
 			return lookup(server, name, recordType, "tcp")
 		} else {
-			return nil, fmt.Errorf("Couldn't resolve name '%s'", name)
+			return nil, fmt.Errorf("Couldn't resolve name '%s': %v", name, err)
 		}
 	}
 
