@@ -6,6 +6,7 @@ import (
 
 	"github.com/benschw/srv-lb/dns"
 	"github.com/benschw/srv-lb/lb"
+	"github.com/benschw/srv-lb/strategy/first"
 	"github.com/benschw/srv-lb/strategy/random"
 	"github.com/stretchr/testify/assert"
 )
@@ -63,4 +64,26 @@ func TestRandomStrategy(t *testing.T) {
 
 	// then
 	assert.Nil(t, err)
+}
+
+func TestFirstStrategy(t *testing.T) {
+	lib, err := dns.NewDefaultLookupLib()
+	assert.Nil(t, err)
+
+	//given
+	c := lb.NewGeneric(&lb.Config{
+		Dns:      lib,
+		Strategy: first.FirstStrategy,
+	})
+
+	// when
+	srvName := "foo.service.fligl.io"
+	add1, err1 := c.Next(srvName)
+	add2, err2 := c.Next(srvName)
+
+	// then
+	assert.Nil(t, err1)
+	assert.Nil(t, err2)
+
+	assert.NotEqual(t, add1, add2)
 }
