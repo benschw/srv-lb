@@ -1,7 +1,6 @@
 package first
 
 import (
-	"log"
 	"testing"
 
 	"github.com/benschw/srv-lb/dns"
@@ -18,8 +17,6 @@ func TestFirstLookup(t *testing.T) {
 
 	// when
 	address, err := c.Next(srvName)
-
-	log.Fatal(address)
 
 	// then
 	assert.Nil(t, err)
